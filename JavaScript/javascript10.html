@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>call和apply的模拟实现 | 个人笔记</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    
+    <meta name="description" content="前端笔记">
+    
+    <link rel="preload" href="/jaycee-blog/assets/css/0.styles.21370007.css" as="style"><link rel="preload" href="/jaycee-blog/assets/js/app.619cf2ff.js" as="script"><link rel="preload" href="/jaycee-blog/assets/js/3.337be5a9.js" as="script"><link rel="preload" href="/jaycee-blog/assets/js/1.e88310c2.js" as="script"><link rel="preload" href="/jaycee-blog/assets/js/16.ae5b0c2c.js" as="script"><link rel="prefetch" href="/jaycee-blog/assets/js/10.c22c76a8.js"><link rel="prefetch" href="/jaycee-blog/assets/js/11.847d1b61.js"><link rel="prefetch" href="/jaycee-blog/assets/js/12.38fc0c15.js"><link rel="prefetch" href="/jaycee-blog/assets/js/13.7329c858.js"><link rel="prefetch" href="/jaycee-blog/assets/js/14.cd3921d3.js"><link rel="prefetch" href="/jaycee-blog/assets/js/15.7544894c.js"><link rel="prefetch" href="/jaycee-blog/assets/js/17.93d0f4a9.js"><link rel="prefetch" href="/jaycee-blog/assets/js/18.361490bd.js"><link rel="prefetch" href="/jaycee-blog/assets/js/19.437ef4c2.js"><link rel="prefetch" href="/jaycee-blog/assets/js/20.42a0a068.js"><link rel="prefetch" href="/jaycee-blog/assets/js/21.262cb206.js"><link rel="prefetch" href="/jaycee-blog/assets/js/22.8a439952.js"><link rel="prefetch" href="/jaycee-blog/assets/js/23.d479247c.js"><link rel="prefetch" href="/jaycee-blog/assets/js/24.29aa039f.js"><link rel="prefetch" href="/jaycee-blog/assets/js/25.cbd0c7ae.js"><link rel="prefetch" href="/jaycee-blog/assets/js/26.95290777.js"><link rel="prefetch" href="/jaycee-blog/assets/js/27.612b3d53.js"><link rel="prefetch" href="/jaycee-blog/assets/js/28.bf04c750.js"><link rel="prefetch" href="/jaycee-blog/assets/js/29.0423dafb.js"><link rel="prefetch" href="/jaycee-blog/assets/js/30.306a2710.js"><link rel="prefetch" href="/jaycee-blog/assets/js/31.8262ec5c.js"><link rel="prefetch" href="/jaycee-blog/assets/js/32.f43acb2b.js"><link rel="prefetch" href="/jaycee-blog/assets/js/33.697d7739.js"><link rel="prefetch" href="/jaycee-blog/assets/js/4.b8d93e73.js"><link rel="prefetch" href="/jaycee-blog/assets/js/5.3b24391f.js"><link rel="prefetch" href="/jaycee-blog/assets/js/6.81d56d99.js"><link rel="prefetch" href="/jaycee-blog/assets/js/7.eb17073f.js"><link rel="prefetch" href="/jaycee-blog/assets/js/8.7dcc6123.js"><link rel="prefetch" href="/jaycee-blog/assets/js/9.b325910a.js">
+    <link rel="stylesheet" href="/jaycee-blog/assets/css/0.styles.21370007.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container" data-v-7dd95ae2><div data-v-7dd95ae2><div class="password-shadow password-wrapper-out" style="display:none;" data-v-59e6cb88 data-v-7dd95ae2 data-v-7dd95ae2><h3 class="title" data-v-59e6cb88>个人笔记</h3> <p class="description" data-v-59e6cb88>前端笔记</p> <label id="box" class="inputBox" data-v-59e6cb88><input type="password" value="" data-v-59e6cb88> <span data-v-59e6cb88>Konck! Knock!</span> <button data-v-59e6cb88>OK</button></label> <div class="footer" data-v-59e6cb88><span data-v-59e6cb88><i class="iconfont reco-theme" data-v-59e6cb88></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-59e6cb88>vuePress-theme-reco</a></span> <span data-v-59e6cb88><i class="iconfont reco-copyright" data-v-59e6cb88></i> <a data-v-59e6cb88><!---->
+          
+        <!---->
+        2023
+      </a></span></div></div> <div class="hide" data-v-7dd95ae2><header class="navbar" data-v-7dd95ae2><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/jaycee-blog/" class="home-link router-link-active"><!----> <span class="site-name">个人笔记</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      我的
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/jaycee-blog/Person/resume.html" class="nav-link"><i class="undefined"></i>
+  个人介绍
+</a></li></ul></div></div><div class="nav-item"><a href="https://github.com/xiaojuan-xu/jaycee-blog" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-7dd95ae2></div> <aside class="sidebar" data-v-7dd95ae2><div class="personal-info-wrapper" data-v-1fad0c41 data-v-7dd95ae2><!----> <!----> <div class="num" data-v-1fad0c41><div data-v-1fad0c41><h3 data-v-1fad0c41>19</h3> <h6 data-v-1fad0c41>文章</h6></div> <div data-v-1fad0c41><h3 data-v-1fad0c41>0</h3> <h6 data-v-1fad0c41>标签</h6></div></div> <ul class="social-links" data-v-1fad0c41></ul> <hr data-v-1fad0c41></div> <nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      我的
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/jaycee-blog/Person/resume.html" class="nav-link"><i class="undefined"></i>
+  个人介绍
+</a></li></ul></div></div><div class="nav-item"><a href="https://github.com/xiaojuan-xu/jaycee-blog" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav> <ul class="sidebar-links"><li><a href="/jaycee-blog/" aria-current="page" class="sidebar-link">前言</a></li><li><section class="sidebar-group collapsable depth-0"><a href="/jaycee-blog/JavaScript/javascript1" class="sidebar-heading clickable open"><span>JavaScript</span> <span class="arrow down"></span></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/jaycee-blog/JavaScript/javascript1.html" class="sidebar-link">原型到原型链</a></li><li><a href="/jaycee-blog/JavaScript/javascript2.html" class="sidebar-link">词法作用域和动态作用域</a></li><li><a href="/jaycee-blog/JavaScript/javascript3.html" class="sidebar-link">执行上下文栈</a></li><li><a href="/jaycee-blog/JavaScript/javascript4.html" class="sidebar-link">变量对象</a></li><li><a href="/jaycee-blog/JavaScript/javascript5.html" class="sidebar-link">作用域链</a></li><li><a href="/jaycee-blog/JavaScript/javascript6.html" class="sidebar-link">ECMAScript规范解读this</a></li><li><a href="/jaycee-blog/JavaScript/javascript7.html" class="sidebar-link">执行上下文</a></li><li><a href="/jaycee-blog/JavaScript/javascript8.html" class="sidebar-link">闭包</a></li><li><a href="/jaycee-blog/JavaScript/javascript9.html" class="sidebar-link">参数按值传递</a></li><li><a href="/jaycee-blog/JavaScript/javascript10.html" aria-current="page" class="active sidebar-link">call和apply的模拟实现</a></li><li><a href="/jaycee-blog/JavaScript/javascript11.html" class="sidebar-link">bind的模拟实现</a></li><li><a href="/jaycee-blog/JavaScript/javascript12.html" class="sidebar-link">new的模拟实现</a></li><li><a href="/jaycee-blog/JavaScript/javascript13.html" class="sidebar-link">类数组对象与arguments</a></li><li><a href="/jaycee-blog/JavaScript/javascript14.html" class="sidebar-link">创建对象的多种方式以及优缺点</a></li><li><a href="/jaycee-blog/JavaScript/javascript15.html" class="sidebar-link">继承的多种方式以及优缺点</a></li><li><a href="/jaycee-blog/JavaScript/javascript16.html" class="sidebar-link">15篇正式完结！</a></li><li><a href="/jaycee-blog/JavaScript/javascript17.html" class="sidebar-link">浮点数精度</a></li><li><a href="/jaycee-blog/JavaScript/javascript18.html" class="sidebar-link">头疼的类型转换(上)</a></li><li><a href="/jaycee-blog/JavaScript/javascript19.html" class="sidebar-link">头疼的类型转换(下)</a></li><li><a href="/jaycee-blog/JavaScript/accessControlExposeHeaders.html" class="sidebar-link">accessControlExposeHeaders</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><a href="/jaycee-blog/interviewQuestions/question" class="sidebar-heading clickable"><span>question</span> <span class="arrow right"></span></a> <!----></section></li></ul> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-59e6cb88 data-v-7dd95ae2><h3 class="title" data-v-59e6cb88></h3> <!----> <label id="box" class="inputBox" data-v-59e6cb88><input type="password" value="" data-v-59e6cb88> <span data-v-59e6cb88>Konck! Knock!</span> <button data-v-59e6cb88>OK</button></label> <div class="footer" data-v-59e6cb88><span data-v-59e6cb88><i class="iconfont reco-theme" data-v-59e6cb88></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-59e6cb88>vuePress-theme-reco</a></span> <span data-v-59e6cb88><i class="iconfont reco-copyright" data-v-59e6cb88></i> <a data-v-59e6cb88><!---->
+          
+        <!---->
+        2023
+      </a></span></div></div> <div data-v-7dd95ae2><div data-v-7dd95ae2><main class="page"><section style="display:;"><div class="page-title"><h1 class="title">call和apply的模拟实现</h1> <div data-v-8a445198><!----> <!----> <!----> <!----></div></div> <div class="theme-reco-content content__default"><h1 id="call和apply的模拟实现"><a href="#call和apply的模拟实现" class="header-anchor">#</a> call和apply的模拟实现</h1> <p><strong>原文链接：<a href="https://github.com/mqyqingfeng/Blog" target="_blank" rel="noopener noreferrer">https://github.com/mqyqingfeng/Blog<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></strong></p> <h3 id="call"><a href="#call" class="header-anchor">#</a> <strong>call</strong></h3> <hr> <p>一句话介绍 call：</p> <blockquote><p>call() 方法在使用一个指定的 this 值和若干个指定的参数值的前提下调用某个函数或方法。
+举个例子：</p></blockquote> <div class="language- extra-class"><pre class="language-text"><code>var foo = {
+    value: 1
+};
+
+function bar() {
+    console.log(this.value);
+}
+
+bar.call(foo); // 1
+</code></pre></div><p>注意两点：</p> <ol><li>call 改变了 this 的指向，指向到 foo</li> <li>bar 函数执行了</li></ol> <h3 id="模拟实现第一步"><a href="#模拟实现第一步" class="header-anchor">#</a> <strong>模拟实现第一步</strong></h3> <hr> <p>那么我们该怎么模拟实现这两个效果呢？</p> <p>试想当调用 call 的时候，把 foo 对象改造成如下：</p> <div class="language- extra-class"><pre class="language-text"><code>var foo = {
+    value: 1,
+    bar: function() {
+        console.log(this.value)
+    }
+};
+
+foo.bar(); // 1
+</code></pre></div><p>这个时候 this 就指向了 foo，是不是很简单呢？</p> <p>但是这样却给 foo 对象本身添加了一个属性，这可不行呐！</p> <p>不过也不用担心，我们用 delete 再删除它不就好了~</p> <p>所以我们模拟的步骤可以分为：</p> <ol><li>将函数设为对象的属性</li> <li>执行该函数</li> <li>删除该函数</li></ol> <p>以上个例子为例，就是：</p> <div class="language- extra-class"><pre class="language-text"><code>// 第一步
+foo.fn = bar
+// 第二步
+foo.fn()
+// 第三步
+delete foo.fn
+</code></pre></div><p>fn 是对象的属性名，反正最后也要删除它，所以起成什么都无所谓。</p> <p>根据这个思路，我们可以尝试着去写第一版的 call2 函数：</p> <div class="language- extra-class"><pre class="language-text"><code>// 第一版
+Function.prototype.call2 = function(context) {
+    // 首先要获取调用call的函数，用this可以获取
+    context.fn = this;
+    context.fn();
+    delete context.fn;
+}
+
+// 测试一下
+var foo = {
+    value: 1
+};
+
+function bar() {
+    console.log(this.value);
+}
+
+bar.call2(foo); // 1
+</code></pre></div><p>正好可以打印 1 哎！是不是很开心！(～￣▽￣)～</p> <h3 id="模拟实现第二步"><a href="#模拟实现第二步" class="header-anchor">#</a> <strong>模拟实现第二步</strong></h3> <hr> <p>最一开始也讲了，call 函数还能给定参数执行函数。举个例子：</p> <div class="language- extra-class"><pre class="language-text"><code>var foo = {
+    value: 1
+};
+
+function bar(name, age) {
+    console.log(name)
+    console.log(age)
+    console.log(this.value);
+}
+
+bar.call(foo, 'kevin', 18);
+// kevin
+// 18
+// 1
+</code></pre></div><p>注意：传入的参数并不确定，这可咋办？</p> <p>不急，我们可以从 Arguments 对象中取值，取出第二个到最后一个参数，然后放到一个数组里。</p> <p>比如这样：</p> <div class="language- extra-class"><pre class="language-text"><code>// 以上个例子为例，此时的arguments为：
+// arguments = {
+//      0: foo,
+//      1: 'kevin',
+//      2: 18,
+//      length: 3
+// }
+// 因为arguments是类数组对象，所以可以用for循环
+var args = [];
+for(var i = 1, len = arguments.length; i &lt; len; i++) {
+    args.push('arguments[' + i + ']');
+}
+
+// 执行后 args为 [&quot;arguments[1]&quot;, &quot;arguments[2]&quot;, &quot;arguments[3]&quot;]
+</code></pre></div><p>不定长的参数问题解决了，我们接着要把这个参数数组放到要执行的函数的参数里面去。</p> <div class="language- extra-class"><pre class="language-text"><code>// 将数组里的元素作为多个参数放进函数的形参里
+context.fn(args.join(','))
+// (O_o)??
+// 这个方法肯定是不行的啦！！！
+</code></pre></div><p>也许有人想到用 ES6 的方法，不过 call 是 ES3 的方法，我们为了模拟实现一个 ES3 的方法，要用到ES6的方法，好像……，嗯，也可以啦。但是我们这次用 eval 方法拼成一个函数，类似于这样：</p> <div class="language- extra-class"><pre class="language-text"><code>eval('context.fn(' + args +')')
+</code></pre></div><p>这里 args 会自动调用 Array.toString() 这个方法。</p> <p>所以我们的第二版克服了两个大问题，代码如下：</p> <div class="language- extra-class"><pre class="language-text"><code>// 第二版
+Function.prototype.call2 = function(context) {
+    context.fn = this;
+    var args = [];
+    for(var i = 1, len = arguments.length; i &lt; len; i++) {
+        args.push('arguments[' + i + ']');
+    }
+    eval('context.fn(' + args +')');
+    delete context.fn;
+}
+
+// 测试一下
+var foo = {
+    value: 1
+};
+
+function bar(name, age) {
+    console.log(name)
+    console.log(age)
+    console.log(this.value);
+}
+
+bar.call2(foo, 'kevin', 18); 
+// kevin
+// 18
+// 1
+</code></pre></div><p>(๑•̀ㅂ•́)و✧</p> <h3 id="模拟实现第三步"><a href="#模拟实现第三步" class="header-anchor">#</a> <strong>模拟实现第三步</strong></h3> <hr> <p>模拟代码已经完成 80%，还有两个小点要注意：</p> <h4 id="_1-this-参数可以传-null-当为-null-的时候-视为指向-window"><a href="#_1-this-参数可以传-null-当为-null-的时候-视为指向-window" class="header-anchor">#</a> <strong>1.this 参数可以传 null，当为 null 的时候，视为指向 window</strong></h4> <p>举个例子：</p> <div class="language- extra-class"><pre class="language-text"><code>var value = 1;
+
+function bar() {
+    console.log(this.value);
+}
+
+bar.call(null); // 1
+</code></pre></div><p>虽然这个例子本身不使用 call，结果依然一样。</p> <h4 id="_2-函数是可以有返回值的"><a href="#_2-函数是可以有返回值的" class="header-anchor">#</a> <strong>2.函数是可以有返回值的！</strong></h4> <p>举个例子：</p> <div class="language- extra-class"><pre class="language-text"><code>var obj = {
+    value: 1
+}
+
+function bar(name, age) {
+    return {
+        value: this.value,
+        name: name,
+        age: age
+    }
+}
+
+console.log(bar.call(obj, 'kevin', 18));
+// Object {
+//    value: 1,
+//    name: 'kevin',
+//    age: 18
+// }
+</code></pre></div><p>不过都很好解决，让我们直接看第三版也就是最后一版的代码：</p> <div class="language- extra-class"><pre class="language-text"><code>// 第三版
+Function.prototype.call2 = function (context) {
+    var context = context || window;
+    context.fn = this;
+
+    var args = [];
+    for(var i = 1, len = arguments.length; i &lt; len; i++) {
+        args.push('arguments[' + i + ']');
+    }
+
+    var result = eval('context.fn(' + args +')');
+
+    delete context.fn
+    return result;
+}
+
+// 测试一下
+var value = 2;
+
+var obj = {
+    value: 1
+}
+
+function bar(name, age) {
+    console.log(this.value);
+    return {
+        value: this.value,
+        name: name,
+        age: age
+    }
+}
+
+bar.call2(null); // 2
+
+console.log(bar.call2(obj, 'kevin', 18));
+// 1
+// Object {
+//    value: 1,
+//    name: 'kevin',
+//    age: 18
+// }
+</code></pre></div><p>到此，我们完成了 call 的模拟实现，给自己一个赞 ｂ（￣▽￣）ｄ</p> <h3 id="apply的模拟实现"><a href="#apply的模拟实现" class="header-anchor">#</a> <strong>apply的模拟实现</strong></h3> <hr> <p>apply 的实现跟 call 类似，在这里直接给代码，代码来自于知乎 @郑航的实现：</p> <div class="language- extra-class"><pre class="language-text"><code>Function.prototype.apply = function (context, arr) {
+    var context = Object(context) || window;
+    context.fn = this;
+
+    var result;
+    if (!arr) {
+        result = context.fn();
+    }
+    else {
+        var args = [];
+        for (var i = 0, len = arr.length; i &lt; len; i++) {
+            args.push('arr[' + i + ']');
+        }
+        result = eval('context.fn(' + args + ')')
+    }
+
+    delete context.fn
+    return result;
+}
+</code></pre></div></div></section> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/jaycee-blog/JavaScript/javascript9.html" class="prev">
+          参数按值传递
+        </a></span> <span class="next"><a href="/jaycee-blog/JavaScript/javascript11.html">
+          bind的模拟实现
+        </a></span></p></div> <div class="comments-wrapper"><!----></div></main></div> <!----></div> <ul class="sub-sidebar sub-sidebar-wrapper" style="width:12rem;" data-v-b57cc07c data-v-7dd95ae2><li class="level-3" data-v-b57cc07c><a href="/jaycee-blog/JavaScript/javascript10.html#call" class="sidebar-link reco-side-call" data-v-b57cc07c>_call_</a></li><li class="level-3" data-v-b57cc07c><a href="/jaycee-blog/JavaScript/javascript10.html#模拟实现第一步" class="sidebar-link reco-side-模拟实现第一步" data-v-b57cc07c>_模拟实现第一步_</a></li><li class="level-3" data-v-b57cc07c><a href="/jaycee-blog/JavaScript/javascript10.html#模拟实现第二步" class="sidebar-link reco-side-模拟实现第二步" data-v-b57cc07c>_模拟实现第二步_</a></li><li class="level-3" data-v-b57cc07c><a href="/jaycee-blog/JavaScript/javascript10.html#模拟实现第三步" class="sidebar-link reco-side-模拟实现第三步" data-v-b57cc07c>_模拟实现第三步_</a></li><li class="level-3" data-v-b57cc07c><a href="/jaycee-blog/JavaScript/javascript10.html#apply的模拟实现" class="sidebar-link reco-side-apply的模拟实现" data-v-b57cc07c>_apply的模拟实现_</a></li></ul></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/jaycee-blog/assets/js/app.619cf2ff.js" defer></script><script src="/jaycee-blog/assets/js/3.337be5a9.js" defer></script><script src="/jaycee-blog/assets/js/1.e88310c2.js" defer></script><script src="/jaycee-blog/assets/js/16.ae5b0c2c.js" defer></script>
+  </body>
+</html>
